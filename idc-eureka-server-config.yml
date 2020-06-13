@@ -1,0 +1,23 @@
+spring: 
+  profiles: 
+    active: dev # 激活开发环境配置
+
+#将使用eureka注册的服务逻辑名称
+server:
+  port: 8001
+spring: 
+  profiles: dev # 开发环境 
+  application: 
+    name: idc-eureka-server
+#eureka服务位置
+eureka:
+  instance:
+    hostname: eureka8001
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+    register-with-eureka: false
+    fetch-registry: false
+  server:
+    enable-self-preservation: false

@@ -8,7 +8,7 @@ spring:
 #eureka服务位置
 eureka:
   instance:
-    hostname: eureka8001
+    hostname: localhost
     prefer-ip-address: true
   client:
     service-url:

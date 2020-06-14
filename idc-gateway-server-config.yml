@@ -1,0 +1,35 @@
+#将使用eureka注册的服务逻辑名称
+spring:
+  application:
+    profiles: dev # 开发环境 
+    name: idc-gateway-server
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: false #表明gateway开启服务注册和发现的功能，并且spring cloud gateway自动根据服务发现为每一个服务创建了一个router，这个router将以服务名开头的请求路径转发到对应的服务。
+          lowerCaseServiceId: true #将请求路径上的服务名配置为小写（因为服务注册的时候，向注册中心注册时将服务名转成大写的了）
+      routes:
+      - id: database_route
+        uri: lb://idc-basedata-web #注册中心的服务名
+        predicates:
+          - Path=/base-web/** #访问gateway的路径
+        filters:
+          - StripPrefix=1  #StripPrefix=1就代表截取路径的个数为1，比如前端过来请求/test/good/1/view，匹配成功后，路由到后端的请求路径就会变成http://localhost:8888/good/1/view
+
+
+server:
+  port: 7001
+#eureka服务位置
+eureka:
+#  instanc中的配置是让该服务使用IP注册到注册中心，而不是hostname
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${server.port}
+  client:
+    service-url:
+      defaultZone: http://localhost:8001/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+
+    
